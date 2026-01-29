@@ -12,12 +12,12 @@ builds:
       - -trimpath
     ldflags:
       - -s -w
-        -X github.com/nikhilsbhat/yamll/version.Version={{.Version}}
-        -X github.com/nikhilsbhat/yamll/version.Env={{.Env.BUILD_ENVIRONMENT}}
-        -X github.com/nikhilsbhat/yamll/version.BuildDate={{.Date}}
-        -X github.com/nikhilsbhat/yamll/version.Revision={{.Commit}}
-        -X github.com/nikhilsbhat/yamll/version.GoVersion={{.Env.GOVERSION}}
-        -X github.com/nikhilsbhat/yamll/version.Platform={{ .Os }}/{{ .Arch }}
+        -X github.com/nikhilsbhat/ingress-traefik-converter/version.Version={{.Version}}
+        -X github.com/nikhilsbhat/ingress-traefik-converter/version.Env={{.Env.BUILD_ENVIRONMENT}}
+        -X github.com/nikhilsbhat/ingress-traefik-converter/version.BuildDate={{.Date}}
+        -X github.com/nikhilsbhat/ingress-traefik-converter/version.Revision={{.Commit}}
+        -X github.com/nikhilsbhat/ingress-traefik-converter/version.GoVersion={{.Env.GOVERSION}}
+        -X github.com/nikhilsbhat/ingress-traefik-converter/version.Platform={{ .Os }}/{{ .Arch }}
     goos:
       - freebsd
       - windows
@@ -34,12 +34,12 @@ dockers:
   - goos: linux
     goarch: amd64
     ids:
-      - yamll
+      - ingress-traefik-converter
     skip_push: false
     image_templates:
-      - "ghcr.io/nikhilsbhat/yamll:latest"
-      - "ghcr.io/nikhilsbhat/yamll:{{ .Tag }}"
-      - "ghcr.io/nikhilsbhat/yamll:{{ .Tag }}-{{ .Env.GOVERSION }}"
+      - "ghcr.io/nikhilsbhat/ingress-traefik-converter:latest"
+      - "ghcr.io/nikhilsbhat/ingress-traefik-converter:{{ .Tag }}"
+      - "ghcr.io/nikhilsbhat/ingress-traefik-converter:{{ .Tag }}-{{ .Env.GOVERSION }}"
     dockerfile: Dockerfile
 
 archives:
@@ -53,9 +53,9 @@ archives:
       {{- else }}{{ .Arch }}{{ end }}
 
 brews:
-  - name: yamll
-    homepage: https://github.com/nikhilsbhat/yamll
-    url_template: "https://github.com/nikhilsbhat/yamll/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+  - name: ingress-traefik-converter
+    homepage: https://github.com/nikhilsbhat/ingress-traefik-converter
+    url_template: "https://github.com/nikhilsbhat/ingress-traefik-converter/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
     description: "A utility that allows importing YAML files as libraries, similar to how programming languages manage dependencies"
     license: "MIT"
     directory: Formula
@@ -75,8 +75,8 @@ brews:
           name: homebrew-stable
           branch: main
   - name: '{{ .ProjectName }}@{{ .Version }}'
-    homepage: https://github.com/nikhilsbhat/yamll
-    url_template: "https://github.com/nikhilsbhat/yamll/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+    homepage: https://github.com/nikhilsbhat/ingress-traefik-converter
+    url_template: "https://github.com/nikhilsbhat/ingress-traefik-converter/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
     description: "A utility that allows importing YAML files as libraries, similar to how programming languages manage dependencies"
     license: "MIT"
     directory: Formula
