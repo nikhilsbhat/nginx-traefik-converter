@@ -1,11 +1,12 @@
 package middleware
 
 import (
+	"strconv"
+
 	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/configs"
 	"github.com/traefik/traefik/v3/pkg/config/dynamic"
 	traefik "github.com/traefik/traefik/v3/pkg/provider/kubernetes/crd/traefikio/v1alpha1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"strconv"
 )
 
 /* ---------------- BODY SIZE ---------------- */
@@ -14,6 +15,8 @@ import (
 // Annotations:
 //   - "nginx.ingress.kubernetes.io/proxy-body-size"
 func BodySize(ctx configs.Context) error {
+	ctx.Log.Debug("running converter BodySize")
+
 	val, ok := ctx.Annotations["nginx.ingress.kubernetes.io/proxy-body-size"]
 	if !ok {
 		return nil

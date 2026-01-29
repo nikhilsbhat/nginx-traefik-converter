@@ -28,6 +28,7 @@ linters:
     - tagalign
     - tagliatelle
     - wrapcheck
+    - noinlineerr
   settings:
     dupl:
       threshold: 100

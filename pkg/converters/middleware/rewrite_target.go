@@ -13,6 +13,8 @@ import (
 // Annotations:
 //   - "nginx.ingress.kubernetes.io/rewrite-target"
 func RewriteTarget(ctx configs.Context) {
+	ctx.Log.Debug("running converter RewriteTarget")
+
 	val, ok := ctx.Annotations["nginx.ingress.kubernetes.io/rewrite-target"]
 	if !ok {
 		return

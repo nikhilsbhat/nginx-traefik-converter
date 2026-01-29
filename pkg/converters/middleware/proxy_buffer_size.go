@@ -9,10 +9,12 @@ import (
 
 /* ---------------- PROXY BUFFER SIZE ---------------- */
 
-// HandleProxyBufferSize handles the below annotations.
+// ProxyBufferSize handles the below annotations.
 // Annotations:
 //   - "nginx.ingress.kubernetes.io/proxy-buffer-size"
-func HandleProxyBufferSize(ctx configs.Context, opts configs.Options) {
+func ProxyBufferSize(ctx configs.Context, opts configs.Options) {
+	ctx.Log.Debug("running converter ProxyBufferSize")
+
 	val, ok := ctx.Annotations["nginx.ingress.kubernetes.io/proxy-buffer-size"]
 	if !ok {
 		return
@@ -23,6 +25,7 @@ func HandleProxyBufferSize(ctx configs.Context, opts configs.Options) {
 		ctx.Result.Warnings = append(ctx.Result.Warnings,
 			"proxy-buffer-size has no equivalent in Traefik and was ignored",
 		)
+
 		return
 	}
 
@@ -31,10 +34,11 @@ func HandleProxyBufferSize(ctx configs.Context, opts configs.Options) {
 		ctx.Result.Warnings = append(ctx.Result.Warnings,
 			"proxy-buffer-size value could not be parsed and was ignored",
 		)
+
 		return
 	}
 
-	mw := &traefik.Middleware{
+	middleware := &traefik.Middleware{
 		TypeMeta: metav1.TypeMeta{
 			APIVersion: traefik.SchemeGroupVersion.String(),
 			Kind:       "Middleware",
@@ -51,7 +55,7 @@ func HandleProxyBufferSize(ctx configs.Context, opts configs.Options) {
 		},
 	}
 
-	ctx.Result.Middlewares = append(ctx.Result.Middlewares, mw)
+	ctx.Result.Middlewares = append(ctx.Result.Middlewares, middleware)
 
 	ctx.Result.Warnings = append(ctx.Result.Warnings,
 		"proxy-buffer-size was heuristically mapped to Traefik buffering; this is NOT equivalent to NGINX behavior",

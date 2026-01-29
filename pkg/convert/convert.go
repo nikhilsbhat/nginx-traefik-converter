@@ -21,6 +21,7 @@ func Run(ctx configs.Context, opts configs.Options) error {
 	if err := middleware.CORS(ctx); err != nil {
 		return err
 	}
+
 	middleware.RateLimit(ctx)
 
 	if err := middleware.BodySize(ctx); err != nil {
@@ -30,7 +31,7 @@ func Run(ctx configs.Context, opts configs.Options) error {
 	middleware.ExtraAnnotations(ctx)
 	tls.HandleAuthTLSVerifyClient(ctx)
 	middleware.ConfigurationSnippet(ctx)
-	middleware.HandleProxyBufferSize(ctx, opts) // 👈 heuristic-aware
+	middleware.ProxyBufferSize(ctx, opts) // 👈 heuristic-aware
 
 	if ingressroute.NeedsIngressRoute(ctx.Annotations) {
 		if err := ingressroute.BuildIngressRoute(ctx); err != nil {

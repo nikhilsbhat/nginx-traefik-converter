@@ -2,18 +2,20 @@ package render
 
 import (
 	"fmt"
-	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/configs"
 	"log"
 	"os"
 	"path/filepath"
 
+	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/configs"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/yaml"
 )
 
+const dirPermission = 0o755
+
 // WriteYAML writes the translated inputs to respective files.
 func WriteYAML(res configs.Result, outDir string) error {
-	if err := os.MkdirAll(outDir, 0o755); err != nil {
+	if err := os.MkdirAll(outDir, dirPermission); err != nil {
 		return err
 	}
 
@@ -54,29 +56,29 @@ func writeObjects(path string, objs []client.Object) error {
 		return nil
 	}
 
-	f, err := os.Create(path)
+	file, err := os.Create(path)
 	if err != nil {
 		return err
 	}
 	defer func(f *os.File) {
-		if err := f.Close(); err != nil {
+		if err = f.Close(); err != nil {
 			log.Fatal(err)
 		}
-	}(f)
+	}(file)
 
-	for i, obj := range objs {
+	for index, obj := range objs {
 		data, err := yaml.Marshal(obj)
 		if err != nil {
 			return err
 		}
 
-		if i > 0 {
-			if _, err := f.WriteString("\n---\n"); err != nil {
+		if index > 0 {
+			if _, err = file.WriteString("\n---\n"); err != nil {
 				return err
 			}
 		}
 
-		if _, err := f.Write(data); err != nil {
+		if _, err = file.Write(data); err != nil {
 			return err
 		}
 	}
@@ -85,18 +87,19 @@ func writeObjects(path string, objs []client.Object) error {
 }
 
 func writeWarnings(path string, warnings []string) error {
-	f, err := os.Create(path)
+	file, err := os.Create(path)
 	if err != nil {
 		return err
 	}
+
 	defer func(f *os.File) {
 		if err = f.Close(); err != nil {
 			log.Fatal(err)
 		}
-	}(f)
+	}(file)
 
 	for _, w := range warnings {
-		if _, err := fmt.Fprintln(f, "- "+w); err != nil {
+		if _, err = fmt.Fprintln(file, "- "+w); err != nil {
 			return err
 		}
 	}

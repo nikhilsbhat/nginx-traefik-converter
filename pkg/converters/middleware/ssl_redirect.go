@@ -14,6 +14,8 @@ import (
 //   - "nginx.ingress.kubernetes.io/ssl-redirect"
 //   - "nginx.ingress.kubernetes.io/force-ssl-redirect"
 func SSLRedirect(ctx configs.Context) {
+	ctx.Log.Debug("running converter SSLRedirect")
+
 	ssl := ctx.Annotations["nginx.ingress.kubernetes.io/ssl-redirect"]
 	force := ctx.Annotations["nginx.ingress.kubernetes.io/force-ssl-redirect"]
 

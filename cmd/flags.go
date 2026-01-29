@@ -1,10 +1,11 @@
 package cmd
 
 import (
+	"log/slog"
+
 	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/configs"
 	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/kubernetes"
 	"github.com/spf13/cobra"
-	"log/slog"
 )
 
 // Config holds the information of the cli config.

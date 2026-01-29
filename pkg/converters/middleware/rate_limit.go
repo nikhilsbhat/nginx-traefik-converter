@@ -1,10 +1,11 @@
 package middleware
 
 import (
+	"strconv"
+
 	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/configs"
 	traefik "github.com/traefik/traefik/v3/pkg/provider/kubernetes/crd/traefikio/v1alpha1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"strconv"
 )
 
 /* ---------------- RATE LIMIT ---------------- */
@@ -14,13 +15,17 @@ import (
 //   - "nginx.ingress.kubernetes.io/limit-rps"
 //   - "nginx.ingress.kubernetes.io/limit-burst-multiplier"
 func RateLimit(ctx configs.Context) {
+	ctx.Log.Debug("running converter RateLimit")
+
 	rps, ok := ctx.Annotations["nginx.ingress.kubernetes.io/limit-rps"]
 	if !ok {
 		return
 	}
 
+	const averageValue = 2
+
 	avg, _ := strconv.Atoi(rps)
-	burst := avg * 2
+	burst := avg * averageValue
 
 	if m := ctx.Annotations["nginx.ingress.kubernetes.io/limit-burst-multiplier"]; m != "" {
 		if v, err := strconv.Atoi(m); err == nil {

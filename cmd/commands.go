@@ -4,14 +4,14 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
-	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/configs"
-	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/convert"
-	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/render"
 	"log/slog"
 	"os"
 	"path/filepath"
 	"strings"
 
+	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/configs"
+	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/convert"
+	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/render"
 	"github.com/nikhilsbhat/ingress-traefik-converter/version"
 	"github.com/spf13/cobra"
 )
@@ -47,7 +47,7 @@ func getImportCommand() *cobra.Command {
 		Long:    "Command that reads the existing nginx ingress and creates an alternatives in traefik, it auto maps annotations",
 		Example: ``,
 		PreRunE: setCLIClient,
-		RunE: func(cmd *cobra.Command, _ []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			ingresses, err := kubeConfig.ListAllIngresses()
 			if err != nil {
 				return err
@@ -55,12 +55,13 @@ func getImportCommand() *cobra.Command {
 
 			for _, ingress := range ingresses {
 				res := configs.NewResult()
-				ctx := configs.New(&ingress, res)
+				ctx := configs.New(&ingress, res, logger)
 
 				if err = convert.Run(*ctx, *opts); err != nil {
 					logger.Error("converting ingress to traefik errored",
 						slog.Any("ingress", ingress.Name),
 						slog.Any("error:", err.Error()))
+
 					return err
 				}
 

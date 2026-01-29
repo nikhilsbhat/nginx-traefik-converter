@@ -8,7 +8,6 @@ import (
 func resolveScheme(
 	annotations map[string]string,
 ) (string, error) {
-
 	if annotations["nginx.ingress.kubernetes.io/grpc-backend"] == "true" {
 		return "h2c", nil
 	}
@@ -26,17 +25,6 @@ func resolveScheme(
 		return "https", nil
 	default:
 		return "", fmt.Errorf("unsupported backend-protocol")
-	}
-}
-
-func ingressRouteName(base, scheme string) string {
-	switch scheme {
-	case "h2c":
-		return base + "-grpc"
-	case "https":
-		return base + "-https"
-	default:
-		return base
 	}
 }
 

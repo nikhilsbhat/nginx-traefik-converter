@@ -7,23 +7,25 @@ import (
 )
 
 func parseSizeBytes(val string) (int64, error) {
-	v := strings.TrimSpace(strings.ToLower(val))
+	value := strings.TrimSpace(strings.ToLower(val))
+
+	const byteValue = 1024
 
 	multiplier := int64(1)
 
 	switch {
-	case strings.HasSuffix(v, "k"):
-		multiplier = 1024
-		v = strings.TrimSuffix(v, "k")
-	case strings.HasSuffix(v, "m"):
-		multiplier = 1024 * 1024
-		v = strings.TrimSuffix(v, "m")
-	case strings.HasSuffix(v, "g"):
-		multiplier = 1024 * 1024 * 1024
-		v = strings.TrimSuffix(v, "g")
+	case strings.HasSuffix(value, "k"):
+		multiplier = byteValue
+		value = strings.TrimSuffix(value, "k")
+	case strings.HasSuffix(value, "m"):
+		multiplier = byteValue * byteValue
+		value = strings.TrimSuffix(value, "m")
+	case strings.HasSuffix(value, "g"):
+		multiplier = byteValue * byteValue * byteValue
+		value = strings.TrimSuffix(value, "g")
 	}
 
-	n, err := strconv.ParseInt(v, 10, 64)
+	n, err := strconv.ParseInt(value, 10, 64)
 	if err != nil {
 		return 0, fmt.Errorf("invalid size value: %s", val)
 	}

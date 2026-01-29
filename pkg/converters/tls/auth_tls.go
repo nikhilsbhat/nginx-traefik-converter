@@ -19,6 +19,7 @@ func HandleAuthTLSVerifyClient(ctx configs.Context) {
 		ctx.Result.Warnings = append(ctx.Result.Warnings,
 			"auth-tls-verify-client is enabled but auth-tls-secret is missing",
 		)
+
 		return
 	}
 

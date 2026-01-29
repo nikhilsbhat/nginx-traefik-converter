@@ -1,12 +1,13 @@
 package middleware
 
 import (
+	"strconv"
+	"strings"
+
 	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/configs"
 	"github.com/traefik/traefik/v3/pkg/config/dynamic"
 	traefik "github.com/traefik/traefik/v3/pkg/provider/kubernetes/crd/traefikio/v1alpha1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"strconv"
-	"strings"
 )
 
 /* ---------------- CORS ---------------- */
@@ -22,37 +23,45 @@ import (
 //   - "nginx.ingress.kubernetes.io/cors-expose-headers"
 //   - "nginx.ingress.kubernetes.io/cors-expose-headers"
 func CORS(ctx configs.Context) error {
+	ctx.Log.Debug("running converter CORS")
+
 	if ctx.Annotations["nginx.ingress.kubernetes.io/enable-cors"] != "true" {
 		return nil
 	}
 
-	h := &dynamic.Headers{}
+	headers := &dynamic.Headers{}
 
 	if v := ctx.Annotations["nginx.ingress.kubernetes.io/cors-allow-origin"]; v != "" {
-		h.AccessControlAllowOriginList = headersNeat(v)
+		headers.AccessControlAllowOriginList = headersNeat(v)
 	}
+
 	if v := ctx.Annotations["nginx.ingress.kubernetes.io/cors-allow-methods"]; v != "" {
-		h.AccessControlAllowMethods = headersNeat(v)
+		headers.AccessControlAllowMethods = headersNeat(v)
 	}
+
 	if v := ctx.Annotations["nginx.ingress.kubernetes.io/cors-allow-headers"]; v != "" {
-		h.AccessControlAllowHeaders = headersNeat(v)
+		headers.AccessControlAllowHeaders = headersNeat(v)
 	}
+
 	if v := ctx.Annotations["nginx.ingress.kubernetes.io/cors-allow-credentials"]; v == "true" {
-		h.AccessControlAllowCredentials = true
+		headers.AccessControlAllowCredentials = true
 	}
+
 	if v := ctx.Annotations["nginx.ingress.kubernetes.io/cors-max-age"]; v != "" {
 		secs, err := strconv.ParseInt(v, 10, 64)
 		if err != nil {
 			return err
 		}
 
-		h.AccessControlMaxAge = secs
+		headers.AccessControlMaxAge = secs
 	}
+
 	if v := ctx.Annotations["nginx.ingress.kubernetes.io/cors-expose-headers"]; v != "" {
-		h.AccessControlExposeHeaders = headersNeat(v)
+		headers.AccessControlExposeHeaders = headersNeat(v)
 	}
+
 	if v := ctx.Annotations["nginx.ingress.kubernetes.io/cors-expose-headers"]; v != "" {
-		h.AccessControlExposeHeaders = headersNeat(v)
+		headers.AccessControlExposeHeaders = headersNeat(v)
 	}
 
 	ctx.Result.Middlewares = append(ctx.Result.Middlewares, &traefik.Middleware{
@@ -64,7 +73,7 @@ func CORS(ctx configs.Context) error {
 			Name:      mwName(ctx, "cors"),
 			Namespace: ctx.Namespace,
 		},
-		Spec: traefik.MiddlewareSpec{Headers: h},
+		Spec: traefik.MiddlewareSpec{Headers: headers},
 	})
 
 	return nil
@@ -72,6 +81,7 @@ func CORS(ctx configs.Context) error {
 
 func headersNeat(value string) []string {
 	headers := strings.Split(value, ",")
+
 	for i, header := range headers {
 		headers[i] = strings.TrimSpace(header)
 	}

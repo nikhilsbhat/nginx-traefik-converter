@@ -1,11 +1,12 @@
 package middleware
 
 import (
+	"strings"
+
 	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/configs"
 	"github.com/traefik/traefik/v3/pkg/config/dynamic"
 	traefik "github.com/traefik/traefik/v3/pkg/provider/kubernetes/crd/traefikio/v1alpha1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"strings"
 )
 
 /* ---------------- CONFIGURATION SNIPPET ---------------- */
@@ -14,13 +15,14 @@ import (
 // Annotations:
 //   - "nginx.ingress.kubernetes.io/configuration-snippet"
 func ConfigurationSnippet(ctx configs.Context) {
+	ctx.Log.Debug("running converter ConfigurationSnippet")
+
 	snippet, ok := ctx.Annotations["nginx.ingress.kubernetes.io/configuration-snippet"]
 	if !ok || strings.TrimSpace(snippet) == "" {
 		return
 	}
 
-	reqHeaders, respHeaders, warnings, unsupported :=
-		parseConfigurationSnippet(snippet)
+	reqHeaders, respHeaders, warnings, unsupported := parseConfigurationSnippet(snippet)
 
 	// Emit Warnings (gzip, cache, etc.)
 	ctx.Result.Warnings = append(ctx.Result.Warnings, warnings...)
@@ -30,6 +32,7 @@ func ConfigurationSnippet(ctx configs.Context) {
 		ctx.Result.Warnings = append(ctx.Result.Warnings,
 			"configuration-snippet contains unsupported NGINX directives and was skipped",
 		)
+
 		return
 	}
 
@@ -39,7 +42,7 @@ func ConfigurationSnippet(ctx configs.Context) {
 	}
 
 	// Create Headers middleware
-	mw := &traefik.Middleware{
+	middleware := &traefik.Middleware{
 		TypeMeta: metav1.TypeMeta{
 			APIVersion: traefik.SchemeGroupVersion.String(),
 			Kind:       "Middleware",
@@ -56,17 +59,14 @@ func ConfigurationSnippet(ctx configs.Context) {
 		},
 	}
 
-	ctx.Result.Middlewares = append(ctx.Result.Middlewares, mw)
+	ctx.Result.Middlewares = append(ctx.Result.Middlewares, middleware)
 }
 
-func parseConfigurationSnippet(snippet string) (
-	reqHeaders map[string]string,
-	respHeaders map[string]string,
-	warnings []string,
-	unsupported []string,
-) {
-	reqHeaders = map[string]string{}
-	respHeaders = map[string]string{}
+func parseConfigurationSnippet(snippet string) (map[string]string, map[string]string, []string, []string) {
+	reqHeaders := map[string]string{}
+	respHeaders := map[string]string{}
+	warnings := make([]string, 0)
+	unsupported := make([]string, 0)
 
 	lines := strings.Split(snippet, "\n")
 
@@ -76,72 +76,61 @@ func parseConfigurationSnippet(snippet string) (
 			continue
 		}
 
+		const proxySetHeaderCount = 3
+
 		switch {
-
-		// ───── Headers (convertible) ─────
-
-		case strings.HasPrefix(line, "more_set_headers"),
+		case strings.HasPrefix(line, "more_set_headers"), // ───── Headers (convertible) ─────
 			strings.HasPrefix(line, "add_header"):
 			if h := extractHeader(line); h != nil {
 				respHeaders[h[0]] = h[1]
 			}
-
-		case strings.HasPrefix(line, "proxy_set_header"):
-			// proxy_set_header X-Foo bar;
+		case strings.HasPrefix(line, "proxy_set_header"): // proxy_set_header X-Foo bar;
 			parts := strings.Fields(line)
-			if len(parts) >= 3 {
+			if len(parts) >= proxySetHeaderCount {
 				reqHeaders[parts[1]] = strings.TrimSuffix(parts[2], ";")
 			}
-
-		// ───── gzip (global-only in Traefik) ─────
-
-		case strings.HasPrefix(line, "gzip "):
+		case strings.HasPrefix(line, "gzip "): // ───── gzip (global-only in Traefik) ─────
 			warnings = append(warnings,
 				"gzip must be enabled globally in Traefik static configuration",
 			)
-
 		case strings.HasPrefix(line, "gzip_comp_level"):
 			warnings = append(warnings,
 				"gzip_comp_level is not configurable in Traefik and was ignored, compression level is fixed",
 			)
-
 		case strings.HasPrefix(line, "gzip_types"):
 			warnings = append(warnings,
 				"gzip_types is not configurable in Traefik and was ignored. Compresses a fixed, internal set of MIME types",
 			)
-
-		// ───── proxy_cache (not supported) ─────
-
-		case strings.HasPrefix(line, "proxy_cache"):
+		case strings.HasPrefix(line, "proxy_cache"): // ───── proxy_cache (not supported) ─────
 			warnings = append(warnings,
 				"proxy_cache is not supported in Traefik OSS and was ignored",
 			)
-
-		// ───── Everything else is unsafe ─────
-
-		default:
+		default: // ───── Everything else is unsafe ─────
 			unsupported = append(unsupported, line)
 		}
 	}
 
-	return
+	return reqHeaders, respHeaders, warnings, unsupported
 }
 
 func extractHeader(line string) []string {
 	// expects: "X-Foo: bar"
 	start := strings.Index(line, "\"")
 	end := strings.LastIndex(line, "\"")
+
 	if start == -1 || end <= start {
 		return nil
 	}
 
-	kv := strings.SplitN(line[start+1:end], ":", 2)
-	if len(kv) != 2 {
+	const extractHeaderCount = 2
+
+	keyValue := strings.SplitN(line[start+1:end], ":", extractHeaderCount)
+	if len(keyValue) != extractHeaderCount {
 		return nil
 	}
 
 	return []string{
-		strings.TrimSpace(kv[0]),
-		strings.TrimSpace(kv[1]),
+		strings.TrimSpace(keyValue[0]),
+		strings.TrimSpace(keyValue[1]),
 	}
 }

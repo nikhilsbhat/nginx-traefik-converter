@@ -2,6 +2,7 @@ package kubernetes
 
 import (
 	"context"
+
 	netv1 "k8s.io/api/networking/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -9,11 +10,11 @@ import (
 // ListAllIngresses list all the ingresses from the specified namespace
 // This paginates and returns all available ingresses from the cluster.
 func (cfg *Config) ListAllIngresses() ([]netv1.Ingress, error) {
-
 	const pageSize int64 = 100
 
-	ingresses := make([]netv1.Ingress, 0)
 	var continueToken string
+
+	ingresses := make([]netv1.Ingress, 0)
 
 	for {
 		opts := metav1.ListOptions{

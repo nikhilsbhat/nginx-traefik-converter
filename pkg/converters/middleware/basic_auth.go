@@ -13,6 +13,8 @@ import (
 //   - "nginx.ingress.kubernetes.io/auth-secret"
 //   - "nginx.ingress.kubernetes.io/auth-realm"
 func BasicAuth(ctx configs.Context) {
+	ctx.Log.Debug("running converter BasicAuth")
+
 	if ctx.Annotations["nginx.ingress.kubernetes.io/auth-type"] != "basic" {
 		return
 	}

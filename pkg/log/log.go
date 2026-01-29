@@ -14,6 +14,7 @@ func SetLogger(logLevel string) *slog.Logger {
 	}
 
 	stdLogger := slog.NewTextHandler(os.Stderr, loggerOpts)
+
 	return slog.New(stdLogger)
 }
 

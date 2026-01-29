@@ -11,7 +11,7 @@ type Result struct {
 	Warnings      []string
 }
 
-// NewResult returns new instance of Result
+// NewResult returns new instance of Result.
 func NewResult() *Result {
 	return &Result{}
 }

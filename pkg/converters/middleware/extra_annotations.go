@@ -16,6 +16,8 @@ import (
 //   - "nginx.ingress.kubernetes.io/backend-protocol"
 //   - "nginx.ingress.kubernetes.io/grpc-backend"
 func ExtraAnnotations(ctx configs.Context) {
+	ctx.Log.Debug("running converter ExtraAnnotations")
+
 	if _, ok := ctx.Annotations["nginx.ingress.kubernetes.io/proxy-buffer-size"]; ok {
 		ctx.Result.Warnings = append(ctx.Result.Warnings,
 			"proxy-buffer-size has no Traefik equivalent",

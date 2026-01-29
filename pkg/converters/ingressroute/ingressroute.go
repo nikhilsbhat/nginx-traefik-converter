@@ -2,13 +2,14 @@ package ingressroute
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/configs"
 	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/converters/tls"
 	traefik "github.com/traefik/traefik/v3/pkg/provider/kubernetes/crd/traefikio/v1alpha1"
 	netv1 "k8s.io/api/networking/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
-	"strings"
 )
 
 // BuildIngressRoute builds ingress routes to nginx ingresses if required.
@@ -81,7 +82,7 @@ func BuildIngressRoute(ctx configs.Context) error {
 	}
 
 	// 4️⃣ Build ONE IngressRoute
-	ir := &traefik.IngressRoute{
+	ingressRoute := &traefik.IngressRoute{
 		TypeMeta: metav1.TypeMeta{
 			APIVersion: traefik.SchemeGroupVersion.String(),
 			Kind:       "IngressRoute",
@@ -96,24 +97,27 @@ func BuildIngressRoute(ctx configs.Context) error {
 		},
 	}
 
-	tls.ApplyTLSOption(ir, ctx)
+	tls.ApplyTLSOption(ingressRoute, ctx)
 
-	ctx.Result.IngressRoutes = append(ctx.Result.IngressRoutes, ir)
+	ctx.Result.IngressRoutes = append(ctx.Result.IngressRoutes, ingressRoute)
+
 	return nil
 }
 
 func middlewareRefs(ctx configs.Context) []traefik.MiddlewareRef {
-	var refs []traefik.MiddlewareRef
+	refs := make([]traefik.MiddlewareRef, 0)
+
 	for _, mw := range ctx.Result.Middlewares {
 		refs = append(refs, traefik.MiddlewareRef{
 			Name: mw.GetName(),
 		})
 	}
+
 	return refs
 }
 
 func buildHostOnlyMatch(ing *netv1.Ingress) string {
-	hosts := []string{}
+	hosts := make([]string, 0)
 
 	for _, rule := range ing.Spec.Rules {
 		if rule.Host != "" {
