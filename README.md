@@ -141,3 +141,8 @@ ingress-traefik-converter convert -a #should convert ingress present in all the 
 ingress-traefik-converter convert -c kube-context-one #when you have multiple contexts in same kubeconfig file.
 ingress-traefik-converter convert -c kube-context-one -n namespace-one #adding to above, operations limited to namespace 'namespace-one'  
 ```
+
+## Documentation
+
+Updated documentation on all available commands and flags can be
+found [here](https://github.com/nikhilsbhat/ingress-traefik-converter/blob/main/docs/doc/ingress-traefik-converter.md).
