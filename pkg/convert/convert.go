@@ -17,23 +17,24 @@ func Run(ctx configs.Context, opts configs.Options) error {
 	middleware.RewriteTargets(ctx)
 	middleware.SSLRedirect(ctx)
 	middleware.BasicAuth(ctx)
+	middleware.RateLimit(ctx)
 
 	if err := middleware.CORS(ctx); err != nil {
 		return err
 	}
 
-	middleware.RateLimit(ctx)
-
 	if err := middleware.BodySize(ctx); err != nil {
 		return err
 	}
 
-	middleware.ExtraAnnotations(ctx)
-	tls.HandleAuthTLSVerifyClient(ctx)
+	if err := middleware.ProxyRedirect(ctx); err != nil {
+		return err
+	}
+
 	middleware.ConfigurationSnippets(ctx)
 	middleware.ProxyBufferSizes(ctx, opts) // 👈 heuristic-aware
-
 	middleware.UpstreamVHost(ctx)
+	middleware.ServerSnippet(ctx)
 
 	if ingressroute.NeedsIngressRoute(ctx.Annotations) {
 		if err := ingressroute.BuildIngressRoute(ctx); err != nil {
@@ -41,7 +42,10 @@ func Run(ctx configs.Context, opts configs.Options) error {
 		}
 	}
 
-	middleware.Warnings(ctx)
+	middleware.ExtraAnnotations(ctx)
+	tls.HandleAuthTLSVerifyClient(ctx)
+
+	//middleware.Warnings(ctx)
 
 	return nil
 }

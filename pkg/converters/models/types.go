@@ -28,6 +28,9 @@ const (
 	SslRedirect          Annotation = "nginx.ingress.kubernetes.io/ssl-redirect"
 	ForceSslRedirect     Annotation = "nginx.ingress.kubernetes.io/force-ssl-redirect"
 	UpstreamVhost        Annotation = "nginx.ingress.kubernetes.io/upstream-vhost"
+	ProxyRedirectFrom    Annotation = "nginx.ingress.kubernetes.io/proxy-redirect-from"
+	ProxyRedirectTo      Annotation = "nginx.ingress.kubernetes.io/proxy-redirect-to"
+	ServerSnippet        Annotation = "nginx.ingress.kubernetes.io/server-snippet"
 )
 
 var AllAnnotations = []Annotation{
@@ -56,6 +59,9 @@ var AllAnnotations = []Annotation{
 	SslRedirect,
 	ForceSslRedirect,
 	UpstreamVhost,
+	ProxyRedirectFrom,
+	ProxyRedirectTo,
+	ServerSnippet,
 }
 
 func (a Annotation) String() string {
