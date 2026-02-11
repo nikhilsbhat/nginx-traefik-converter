@@ -31,6 +31,7 @@ const (
 	ProxyRedirectFrom    Annotation = "nginx.ingress.kubernetes.io/proxy-redirect-from"
 	ProxyRedirectTo      Annotation = "nginx.ingress.kubernetes.io/proxy-redirect-to"
 	ServerSnippet        Annotation = "nginx.ingress.kubernetes.io/server-snippet"
+	UnderscoresInHeaders Annotation = "nginx.ingress.kubernetes.io/enable-underscores-in-headers"
 )
 
 var AllAnnotations = []Annotation{
@@ -62,6 +63,7 @@ var AllAnnotations = []Annotation{
 	ProxyRedirectFrom,
 	ProxyRedirectTo,
 	ServerSnippet,
+	UnderscoresInHeaders,
 }
 
 func (a Annotation) String() string {

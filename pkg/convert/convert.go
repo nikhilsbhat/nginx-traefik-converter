@@ -35,6 +35,9 @@ func Run(ctx configs.Context, opts configs.Options) error {
 	middleware.ProxyBufferSizes(ctx, opts) // 👈 heuristic-aware
 	middleware.UpstreamVHost(ctx)
 	middleware.ServerSnippet(ctx)
+	middleware.EnableUnderscoresInHeaders(ctx)
+	middleware.ExtraAnnotations(ctx)
+	middleware.ProxyBuffering(ctx)
 
 	if ingressroute.NeedsIngressRoute(ctx.Annotations) {
 		if err := ingressroute.BuildIngressRoute(ctx); err != nil {
@@ -42,10 +45,7 @@ func Run(ctx configs.Context, opts configs.Options) error {
 		}
 	}
 
-	middleware.ExtraAnnotations(ctx)
 	tls.HandleAuthTLSVerifyClient(ctx)
-
-	// middleware.Warnings(ctx)
 
 	return nil
 }

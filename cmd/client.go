@@ -5,13 +5,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func setCLIClient(_ *cobra.Command, _ []string) error {
+func setCLIClient(cmd *cobra.Command, _ []string) error {
 	logger = log.SetLogger(cliCfg.LogLevel)
 
 	kubeConfig.SetLogger(logger)
 
-	if err := kubeConfig.SetKubeClient(); err != nil {
-		return err
+	if cmd.Name() != "supported-annotations" {
+		if err := kubeConfig.SetKubeClient(); err != nil {
+			return err
+		}
 	}
 
 	kubeConfig.SetKubeNameSpace()

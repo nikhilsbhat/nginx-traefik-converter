@@ -18,20 +18,12 @@ import (
 func ExtraAnnotations(ctx configs.Context) {
 	ctx.Log.Debug("running converter ExtraAnnotations")
 
-	if ctx.Annotations[string(models.ProxyBuffering)] == "off" {
-		warningMessage := "proxy-buffering=off is default behavior in Traefik"
-
-		ctx.Result.Warnings = append(ctx.Result.Warnings, warningMessage)
-
-		ctx.ReportWarning(string(models.CorsAllowMethods), warningMessage)
-	}
-
 	if ctx.Annotations[string(models.ServiceUpstream)] == "true" {
 		warningMessage := "service-upstream=true is default behavior in Traefik"
 
 		ctx.Result.Warnings = append(ctx.Result.Warnings, warningMessage)
 
-		ctx.ReportWarning(string(models.ServiceUpstream), warningMessage)
+		ctx.ReportIgnored(string(models.ServiceUpstream), warningMessage)
 	}
 
 	if ctx.Annotations[string(models.EnableOpentracing)] == "true" {

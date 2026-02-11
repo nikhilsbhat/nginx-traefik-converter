@@ -40,9 +40,13 @@ func emitTLSOption(ctx configs.Context, secretName string) {
 }
 
 // ApplyTLSOption applies TLS configs to ingress routes.
-func ApplyTLSOption(ir *traefik.IngressRoute, ctx configs.Context) {
+func ApplyTLSOption(ingressRoute *traefik.IngressRoute, ctx configs.Context, scheme string) {
+	if scheme != "https" {
+		return
+	}
+
 	if opt, ok := ctx.Result.TLSOptionRefs[ctx.IngressName]; ok {
-		ir.Spec.TLS = &traefik.TLS{
+		ingressRoute.Spec.TLS = &traefik.TLS{
 			Options: &traefik.TLSOptionRef{
 				Name: opt,
 			},

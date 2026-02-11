@@ -2,7 +2,6 @@ package ingressroute
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/configs"
 	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/converters/tls"
@@ -12,7 +11,6 @@ import (
 	"k8s.io/apimachinery/pkg/util/intstr"
 )
 
-// BuildIngressRoute builds ingress routes to nginx ingresses if required.
 func BuildIngressRoute(ctx configs.Context) error {
 	ing := ctx.Ingress
 
@@ -22,18 +20,15 @@ func BuildIngressRoute(ctx configs.Context) error {
 		return err
 	}
 
-	// 2️⃣ Deduplicate services
-	type svcKey struct {
-		name string
-		port int32
-	}
-
-	services := map[svcKey]traefik.Service{}
+	routes := make([]traefik.Route, 0)
+	seen := make(map[string]struct{}) // dedup key set
 
 	for _, rule := range ing.Spec.Rules {
 		if rule.HTTP == nil {
 			continue
 		}
+
+		hostMatch := buildHostMatch(rule.Host)
 
 		for _, path := range rule.HTTP.Paths {
 			svc := path.Backend.Service
@@ -41,47 +36,51 @@ func BuildIngressRoute(ctx configs.Context) error {
 				continue
 			}
 
-			key := svcKey{
-				name: svc.Name,
-				port: svc.Port.Number,
+			pathMatch := buildPathMatch(path)
+			match := combineMatch(hostMatch, pathMatch)
+
+			// Build a stable dedup key
+			key := fmt.Sprintf(
+				"host=%s|path=%s|svc=%s|port=%d|scheme=%s",
+				rule.Host,
+				path.Path,
+				svc.Name,
+				svc.Port.Number,
+				scheme,
+			)
+
+			if _, exists := seen[key]; exists {
+				continue // skip duplicate route
 			}
 
-			if _, exists := services[key]; exists {
-				continue
-			}
+			seen[key] = struct{}{}
 
-			services[key] = traefik.Service{
-				LoadBalancerSpec: traefik.LoadBalancerSpec{
-					Name: svc.Name,
-					Port: intstr.IntOrString{
-						Type:   intstr.Int,
-						IntVal: svc.Port.Number,
+			route := traefik.Route{
+				Kind:  "Rule",
+				Match: match,
+				Services: []traefik.Service{
+					{
+						LoadBalancerSpec: traefik.LoadBalancerSpec{
+							Name: svc.Name,
+							Port: intstr.IntOrString{
+								Type:   intstr.Int,
+								IntVal: svc.Port.Number,
+							},
+							Scheme: scheme,
+						},
 					},
-					Scheme: scheme,
 				},
+				Middlewares: middlewareRefs(ctx),
 			}
+
+			routes = append(routes, route)
 		}
 	}
 
-	if len(services) == 0 {
+	if len(routes) == 0 {
 		return nil
 	}
 
-	// 3️⃣ Build ONE Route per service
-	routes := make([]traefik.Route, 0, len(services))
-
-	for _, svc := range services {
-		routes = append(routes, traefik.Route{
-			Kind:  "Rule",
-			Match: buildHostOnlyMatch(ing),
-			Services: []traefik.Service{
-				svc,
-			},
-			Middlewares: middlewareRefs(ctx),
-		})
-	}
-
-	// 4️⃣ Build ONE IngressRoute
 	ingressRoute := &traefik.IngressRoute{
 		TypeMeta: metav1.TypeMeta{
 			APIVersion: traefik.SchemeGroupVersion.String(),
@@ -97,7 +96,8 @@ func BuildIngressRoute(ctx configs.Context) error {
 		},
 	}
 
-	tls.ApplyTLSOption(ingressRoute, ctx)
+	// Apply TLS only if scheme requires it (as discussed earlier)
+	tls.ApplyTLSOption(ingressRoute, ctx, scheme)
 
 	ctx.Result.IngressRoutes = append(ctx.Result.IngressRoutes, ingressRoute)
 
@@ -116,18 +116,42 @@ func middlewareRefs(ctx configs.Context) []traefik.MiddlewareRef {
 	return refs
 }
 
-func buildHostOnlyMatch(ing *netv1.Ingress) string {
-	hosts := make([]string, 0)
-
-	for _, rule := range ing.Spec.Rules {
-		if rule.Host != "" {
-			hosts = append(hosts, fmt.Sprintf("Host(`%s`)", rule.Host))
-		}
+func buildHostMatch(host string) string {
+	if host == "" {
+		return ""
 	}
 
-	if len(hosts) == 0 {
+	return fmt.Sprintf("Host(`%s`)", host)
+}
+
+func buildPathMatch(path netv1.HTTPIngressPath) string {
+	pth := path.Path
+	if pth == "" {
+		pth = "/"
+	}
+
+	switch *path.PathType {
+	case netv1.PathTypeExact:
+		return fmt.Sprintf("Path(`%s`)", pth)
+	case netv1.PathTypePrefix:
+		return fmt.Sprintf("PathPrefix(`%s`)", pth)
+	case netv1.PathTypeImplementationSpecific:
+		// Best-effort: treat as Prefix (same as most ingress controllers do)
+		return fmt.Sprintf("PathPrefix(`%s`)", pth)
+	default:
+		return fmt.Sprintf("PathPrefix(`%s`)", pth)
+	}
+}
+
+func combineMatch(hostMatch, pathMatch string) string {
+	switch {
+	case hostMatch != "" && pathMatch != "":
+		return hostMatch + " && " + pathMatch
+	case hostMatch != "":
+		return hostMatch
+	case pathMatch != "":
+		return pathMatch
+	default:
 		return "PathPrefix(`/`)"
 	}
-
-	return strings.Join(hosts, " || ")
 }

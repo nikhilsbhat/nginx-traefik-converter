@@ -7,7 +7,9 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 
+	"github.com/fatih/color"
 	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/configs"
 	"github.com/olekukonko/tablewriter"
 )
@@ -44,6 +46,8 @@ var statusLabel = map[configs.AnnotationStatus]string{
 	configs.AnnotationIgnored:   "Ignored",
 }
 
+const fixedStringLength = 80
+
 // ---------------- Public API ----------------
 
 // PrintIngressSummary renders the migration report for a single Ingress.
@@ -75,13 +79,30 @@ func New() *Config {
 	return &Config{}
 }
 
+// ---------------- Separators ----------------
+
+func printSectionSeparator(title string) {
+	line := strings.Repeat("=", fixedStringLength)
+	fmt.Println(line)
+	fmt.Println(color.HiCyanString(title))
+	fmt.Println(line)
+	fmt.Println()
+}
+
+func printSubSectionSeparator(title string) {
+	line := strings.Repeat("-", fixedStringLength)
+	fmt.Println(line)
+	fmt.Println(title)
+	fmt.Println(line)
+	fmt.Println()
+}
+
 // ---------------- Table Renderers ----------------
 
 // printIngressReportTable renders a single Ingress report in table format,
 // including a detailed per-annotation table and a summary table.
 func (cfg *Config) printIngressReportTable(ingressReport configs.IngressReport) error {
-	fmt.Printf("\n=========================== Ingress Report ===========================\n")
-	fmt.Printf("\nIngress: %s/%s\n\n", ingressReport.Namespace, ingressReport.Name)
+	printSectionSeparator(fmt.Sprintf("INGRESS: %s/%s", ingressReport.Namespace, ingressReport.Name))
 
 	table := tablewriter.NewWriter(os.Stdout)
 	table.Header([]string{"Annotation", "Status", "Message"})
@@ -94,7 +115,7 @@ func (cfg *Config) printIngressReportTable(ingressReport configs.IngressReport) 
 			msg = "-"
 		}
 
-		rows = append(rows, []string{entries.Name, statusLabel[entries.Status], msg})
+		rows = append(rows, []string{entries.Name, statusLabelColored(entries.Status), msg})
 	}
 
 	if err := table.Bulk(rows); err != nil {
@@ -106,39 +127,35 @@ func (cfg *Config) printIngressReportTable(ingressReport configs.IngressReport) 
 	}
 
 	// Render per-Ingress summary table.
-	summarizedIngress := summarizeIngress(ingressReport)
+	printSubSectionSeparator("SUMMARY")
 
-	return renderSummaryTable("SUMMARY", summarizedIngress)
+	return renderSummaryTable(summarizeIngress(ingressReport))
 }
 
 // printGlobalSummaryTable renders the global summary across all Ingresses
 // in table format.
 func (cfg *Config) printGlobalSummaryTable(globalReport configs.GlobalReport) error {
-	fmt.Printf("\n==================================== Global Summary ====================================\n\n")
+	printSectionSeparator("GLOBAL SUMMARY")
 
-	total := summarizeGlobal(globalReport)
-
-	return renderSummaryTable("OVERALL RESULT", total)
+	return renderSummaryTable(summarizeGlobal(globalReport))
 }
 
 // renderSummaryTable renders a generic summary table given a title and summary counts.
-func renderSummaryTable(title string, summaryCounts SummaryCounts) error {
+func renderSummaryTable(summaryCounts SummaryCounts) error {
 	summary := tablewriter.NewWriter(os.Stdout)
 	summary.Header([]string{"Metric", "Count"})
 
 	rows := [][]string{
-		{"Converted", strconv.Itoa(summaryCounts.Converted)},
-		{"Warnings", strconv.Itoa(summaryCounts.Warnings)},
-		{"Skipped", strconv.Itoa(summaryCounts.Skipped)},
-		{"Ignored", strconv.Itoa(summaryCounts.Ignored)},
+		{"Converted", color.HiGreenString(strconv.Itoa(summaryCounts.Converted))},
+		{"Warnings", color.HiYellowString(strconv.Itoa(summaryCounts.Warnings))},
+		{"Skipped", color.HiRedString(strconv.Itoa(summaryCounts.Skipped))},
+		{"Ignored", color.HiBlueString(strconv.Itoa(summaryCounts.Ignored))},
 		{"Result", resultLabel(summaryCounts)},
 	}
 
 	if err := summary.Bulk(rows); err != nil {
 		return err
 	}
-
-	fmt.Printf("\n------------------------ %s ------------------------\n", title)
 
 	return summary.Render()
 }
@@ -147,7 +164,7 @@ func renderSummaryTable(title string, summaryCounts SummaryCounts) error {
 
 // printIngressReport renders a single Ingress report in plain text format.
 func (cfg *Config) printIngressReport(ingressReport configs.IngressReport) {
-	fmt.Printf("\nIngress: %s/%s\n\n", ingressReport.Namespace, ingressReport.Name)
+	printSectionSeparator(fmt.Sprintf("INGRESS: %s/%s", ingressReport.Namespace, ingressReport.Name))
 
 	for _, entries := range ingressReport.Entries {
 		switch entries.Status {
@@ -162,24 +179,26 @@ func (cfg *Config) printIngressReport(ingressReport configs.IngressReport) {
 		}
 	}
 
-	summarizedIngress := summarizeIngress(ingressReport)
-	printSummaryText(fmt.Sprintf("Summary for %s/%s", ingressReport.Namespace, ingressReport.Name), summarizedIngress)
+	printSubSectionSeparator("SUMMARY")
+	printSummaryText(
+		fmt.Sprintf("Summary for %s/%s", ingressReport.Namespace, ingressReport.Name),
+		summarizeIngress(ingressReport),
+	)
 }
 
 // printGlobalSummary renders the aggregated global summary in plain text format.
 func (cfg *Config) printGlobalSummary(globalReport configs.GlobalReport) {
-	total := summarizeGlobal(globalReport)
-
-	printSummaryText("Global Summary", total)
+	printSectionSeparator("GLOBAL SUMMARY")
+	printSummaryText("Global Summary", summarizeGlobal(globalReport))
 }
 
 // printSummaryText prints a human-readable summary block in plain text.
 func printSummaryText(title string, summaryCounts SummaryCounts) {
-	fmt.Printf("\n================== %s ==================\n", title)
-	fmt.Printf("Converted: %d\n", summaryCounts.Converted)
-	fmt.Printf("Warnings:  %d\n", summaryCounts.Warnings)
-	fmt.Printf("Skipped:   %d\n", summaryCounts.Skipped)
-	fmt.Printf("Ignored:   %d\n", summaryCounts.Ignored)
+	fmt.Printf("%s\n", color.HiCyanString(title))
+	fmt.Printf("Converted: %s\n", color.HiGreenString(strconv.Itoa(summaryCounts.Converted)))
+	fmt.Printf("Warnings:  %s\n", color.HiYellowString(strconv.Itoa(summaryCounts.Warnings)))
+	fmt.Printf("Skipped:   %s\n", color.HiRedString(strconv.Itoa(summaryCounts.Skipped)))
+	fmt.Printf("Ignored:   %s\n", color.HiBlueString(strconv.Itoa(summaryCounts.Ignored)))
 	fmt.Printf("Result:    %s\n\n", resultLabel(summaryCounts))
 }
 
@@ -188,14 +207,14 @@ func printSummaryText(title string, summaryCounts SummaryCounts) {
 // resultLabel returns a human-readable overall result string based on summary counts.
 func resultLabel(summaryCounts SummaryCounts) string {
 	if summaryCounts.Skipped > 0 {
-		return "❌ Manual action required"
+		return color.HiRedString("Manual action required")
 	}
 
 	if summaryCounts.Warnings > 0 {
-		return "⚠️ Review recommended"
+		return color.HiYellowString("Review recommended")
 	}
 
-	return "✅ Clean migration"
+	return color.HiGreenString("Clean migration")
 }
 
 // summarizeIngress computes summary counts for a single Ingress report.
@@ -232,4 +251,20 @@ func summarizeGlobal(globalReport configs.GlobalReport) SummaryCounts {
 	}
 
 	return total
+}
+
+// statusLabelColored returns a colored label for a given annotation status.
+func statusLabelColored(annotationStatus configs.AnnotationStatus) string {
+	switch annotationStatus {
+	case configs.AnnotationConverted:
+		return color.HiGreenString("Converted")
+	case configs.AnnotationWarned:
+		return color.HiYellowString("Warning")
+	case configs.AnnotationSkipped:
+		return color.HiRedString("Skipped")
+	case configs.AnnotationIgnored:
+		return color.HiBlueString("Ignored")
+	default:
+		return statusLabel[annotationStatus]
+	}
 }
