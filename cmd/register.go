@@ -16,7 +16,7 @@ func SetIngressTraefikConverterCommands() *cobra.Command {
 // Add an entry in below function to register new command.
 func getIngressTraefikConverterCommands() *cobra.Command {
 	command := new(ingressTraefikConverterCommands)
-	command.commands = append(command.commands, getImportCommand())
+	command.commands = append(command.commands, getConvertCommand())
 	command.commands = append(command.commands, getSupportedAnnotationCommand())
 	command.commands = append(command.commands, getVersionCommand())
 

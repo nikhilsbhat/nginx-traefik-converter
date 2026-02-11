@@ -11,6 +11,10 @@ import (
 	"k8s.io/apimachinery/pkg/util/intstr"
 )
 
+// BuildIngressRoute handles the below annotations.
+// Annotations:
+//   - "nginx.ingress.kubernetes.io/backend-protocol"
+//   - "nginx.ingress.kubernetes.io/grpc-backend"
 func BuildIngressRoute(ctx configs.Context) error {
 	ing := ctx.Ingress
 

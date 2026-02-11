@@ -39,6 +39,10 @@ func Run(ctx configs.Context, opts configs.Options) error {
 	middleware.ExtraAnnotations(ctx)
 	middleware.ProxyBuffering(ctx)
 
+	if err := middleware.ProxyCookiePath(ctx, opts); err != nil {
+		return err
+	}
+
 	if ingressroute.NeedsIngressRoute(ctx.Annotations) {
 		if err := ingressroute.BuildIngressRoute(ctx); err != nil {
 			ctx.Result.Warnings = append(ctx.Result.Warnings, err.Error())

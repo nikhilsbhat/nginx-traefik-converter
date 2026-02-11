@@ -41,8 +41,8 @@ func getVersionCommand() *cobra.Command {
 	}
 }
 
-func getImportCommand() *cobra.Command {
-	importCommand := &cobra.Command{
+func getConvertCommand() *cobra.Command {
+	convertCommand := &cobra.Command{
 		Use:     "convert [flags]",
 		Short:   "Converts the ingress nginx to equivalent trafik configs",
 		Long:    "Command that reads the existing nginx ingress and creates an alternatives in traefik, it auto maps annotations",
@@ -97,15 +97,15 @@ func getImportCommand() *cobra.Command {
 		},
 	}
 
-	importCommand.SilenceErrors = true
-	registerCommonFlags(importCommand)
-	registerImportFlags(importCommand)
+	convertCommand.SilenceErrors = true
+	registerCommonFlags(convertCommand)
+	registerImportFlags(convertCommand)
 
-	return importCommand
+	return convertCommand
 }
 
 func getSupportedAnnotationCommand() *cobra.Command {
-	importCommand := &cobra.Command{
+	supportedAnnotationsCommand := &cobra.Command{
 		Use:     "supported-annotations [flags]",
 		Short:   "list supported annotaions",
 		Long:    "Command list all the annotations that converter supports",
@@ -122,11 +122,11 @@ func getSupportedAnnotationCommand() *cobra.Command {
 		},
 	}
 
-	importCommand.SilenceErrors = true
-	registerCommonFlags(importCommand)
-	registerImportFlags(importCommand)
+	supportedAnnotationsCommand.SilenceErrors = true
+	// registerCommonFlags(supportedAnnotationsCommand)
+	// registerImportFlags(supportedAnnotationsCommand)
 
-	return importCommand
+	return supportedAnnotationsCommand
 }
 
 func versionConfig(_ *cobra.Command, _ []string) error {

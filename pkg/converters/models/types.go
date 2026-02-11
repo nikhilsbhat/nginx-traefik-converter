@@ -30,6 +30,7 @@ const (
 	UpstreamVhost        Annotation = "nginx.ingress.kubernetes.io/upstream-vhost"
 	ProxyRedirectFrom    Annotation = "nginx.ingress.kubernetes.io/proxy-redirect-from"
 	ProxyRedirectTo      Annotation = "nginx.ingress.kubernetes.io/proxy-redirect-to"
+	ProxyCookiePath      Annotation = "nginx.ingress.kubernetes.io/proxy-cookie-path"
 	ServerSnippet        Annotation = "nginx.ingress.kubernetes.io/server-snippet"
 	UnderscoresInHeaders Annotation = "nginx.ingress.kubernetes.io/enable-underscores-in-headers"
 )
@@ -62,6 +63,7 @@ var AllAnnotations = []Annotation{
 	UpstreamVhost,
 	ProxyRedirectFrom,
 	ProxyRedirectTo,
+	ProxyCookiePath,
 	ServerSnippet,
 	UnderscoresInHeaders,
 }
