@@ -13,17 +13,19 @@ type Context struct {
 	Namespace   string            `yaml:"namespace,omitempty" json:"namespace,omitempty"`
 	Annotations map[string]string `yaml:"annotations,omitempty" json:"annotations,omitempty"`
 	Result      *Result           `yaml:"result,omitempty" json:"result,omitempty"`
+	Options     *Options          `yaml:"options,omitempty" json:"options,omitempty"`
 	Log         *slog.Logger
 }
 
 // New returns a new instance of Context when invoked.
-func New(ingress *netv1.Ingress, result *Result, logger *slog.Logger) *Context {
+func New(ingress *netv1.Ingress, result *Result, options *Options, logger *slog.Logger) *Context {
 	return &Context{
 		Ingress:     ingress,
 		IngressName: ingress.Name,
 		Namespace:   ingress.Namespace,
 		Annotations: ingress.Annotations,
 		Result:      result,
+		Options:     options,
 		Log:         logger,
 	}
 }

@@ -32,7 +32,7 @@ func Run(ctx configs.Context, opts configs.Options) error {
 	}
 
 	middleware.ConfigurationSnippets(ctx)
-	middleware.ProxyBufferSizes(ctx, opts) // 👈 heuristic-aware
+	middleware.ProxyBufferSizes(ctx) // 👈 heuristic-aware
 	middleware.UpstreamVHost(ctx)
 	middleware.ServerSnippet(ctx)
 	middleware.EnableUnderscoresInHeaders(ctx)
@@ -40,7 +40,7 @@ func Run(ctx configs.Context, opts configs.Options) error {
 	middleware.ProxyBuffering(ctx)
 	middleware.HandleAuthURL(ctx)
 
-	if err := middleware.ProxyCookiePath(ctx, opts); err != nil {
+	if err := middleware.ProxyCookiePath(ctx); err != nil {
 		return err
 	}
 

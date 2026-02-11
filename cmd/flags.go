@@ -36,8 +36,6 @@ func registerCommonFlags(cmd *cobra.Command) {
 		"root yaml files to be used for importing")
 	cmd.PersistentFlags().BoolVarP(&cliCfg.NoColor, "no-color", "", false,
 		"when enabled the output would not be color encoded")
-	cmd.PersistentFlags().BoolVarP(&opts.ProxyBufferHeuristic, "proxy-buffer-heuristic", "", false,
-		"when enabled, the nginx ingress annotation 'proxy-buffer-size' gets heuristically mapped to Traefik buffering")
 	cmd.PersistentFlags().StringVarP(&kubeConfig.Context, "context", "c", "",
 		"kubernetes context to use")
 	cmd.PersistentFlags().StringVarP(&kubeConfig.NameSpace, "namespace", "n", "default",
@@ -51,4 +49,8 @@ func registerImportFlags(cmd *cobra.Command) {
 		"name of the file to which the final imported yaml should be written to")
 	cmd.PersistentFlags().BoolVarP(&printerConfig.Table, "table", "", false,
 		"when enabled prints output in table format")
+	cmd.PersistentFlags().BoolVarP(&opts.DisablePlugins, "disable-plugins", "", false,
+		"when enabled won't consider the plugins while creating middlewares")
+	cmd.PersistentFlags().BoolVarP(&opts.ProxyBufferHeuristic, "proxy-buffer-heuristic", "", false,
+		"when enabled, the nginx ingress annotation 'proxy-buffer-size' gets heuristically mapped to Traefik buffering")
 }

@@ -13,7 +13,7 @@ import (
 // ProxyBufferSizes handles the below annotations.
 // Annotations:
 //   - "nginx.ingress.kubernetes.io/proxy-buffer-size"
-func ProxyBufferSizes(ctx configs.Context, opts configs.Options) {
+func ProxyBufferSizes(ctx configs.Context) {
 	ctx.Log.Debug("running converter ProxyBufferSize")
 
 	val, ok := ctx.Annotations[string(models.ProxyBufferSize)]
@@ -22,7 +22,7 @@ func ProxyBufferSizes(ctx configs.Context, opts configs.Options) {
 	}
 
 	// Default: warn + ignore
-	if !opts.ProxyBufferHeuristic {
+	if !ctx.Options.ProxyBufferHeuristic {
 		warningMessage := `proxy-buffer-size has no equivalent in Traefik and was ignored
 Traefik does not expose upstream buffer sizing,
 it does not buffer responses the same way and uses Go’s HTTP stack`

@@ -58,7 +58,7 @@ func getConvertCommand() *cobra.Command {
 
 			for _, ingress := range ingresses {
 				res := configs.NewResult()
-				ctx := configs.New(&ingress, res, logger)
+				ctx := configs.New(&ingress, res, opts, logger)
 				ctx.StartIngressReport(ingress.Namespace, ingress.Name)
 
 				if err = convert.Run(*ctx, *opts); err != nil {

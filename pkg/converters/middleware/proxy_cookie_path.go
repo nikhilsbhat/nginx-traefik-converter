@@ -19,7 +19,7 @@ import (
 // ProxyCookiePath handles the below annotations.
 // Annotations:
 //   - "nginx.ingress.kubernetes.io/proxy-cookie-path"
-func ProxyCookiePath(ctx configs.Context, opts configs.Options) error {
+func ProxyCookiePath(ctx configs.Context) error {
 	const ann = string(models.ProxyCookiePath)
 
 	val, ok := ctx.Annotations[ann] //nolint:varnamelen
@@ -41,7 +41,7 @@ func ProxyCookiePath(ctx configs.Context, opts configs.Options) error {
 	}
 
 	// If plugins are not enabled, we cannot safely convert this
-	if opts.DisablePlugins {
+	if ctx.Options.DisablePlugins {
 		msg := "proxy-cookie-path has no native Traefik equivalent; requires a response header rewrite plugin or backend change"
 
 		ctx.Result.Warnings = append(ctx.Result.Warnings, msg)
