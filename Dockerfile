@@ -1,7 +1,7 @@
-### Description: Dockerfile for ingress-traefik-converter
+### Description: Dockerfile for nginx-traefik-converter
 FROM alpine:3.23
 
-COPY ingress-traefik-converter /
+COPY nginx-traefik-converter /
 
 # Starting
-ENTRYPOINT [ "/ingress-traefik-converter" ]
+ENTRYPOINT [ "/nginx-traefik-converter" ]

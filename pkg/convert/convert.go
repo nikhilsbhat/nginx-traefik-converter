@@ -1,10 +1,10 @@
 package convert
 
 import (
-	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/configs"
-	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/converters/ingressroute"
-	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/converters/middleware"
-	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/converters/tls"
+	"github.com/nikhilsbhat/nginx-traefik-converter/pkg/configs"
+	"github.com/nikhilsbhat/nginx-traefik-converter/pkg/converters/ingressroute"
+	"github.com/nikhilsbhat/nginx-traefik-converter/pkg/converters/middleware"
+	"github.com/nikhilsbhat/nginx-traefik-converter/pkg/converters/tls"
 )
 
 // Run processes ingress annotations using the available converters.

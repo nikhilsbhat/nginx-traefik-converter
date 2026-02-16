@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/configs"
-	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/converters/models"
+	"github.com/nikhilsbhat/nginx-traefik-converter/pkg/configs"
+	"github.com/nikhilsbhat/nginx-traefik-converter/pkg/converters/models"
 )
 
 func ProxyBuffering(ctx configs.Context) {

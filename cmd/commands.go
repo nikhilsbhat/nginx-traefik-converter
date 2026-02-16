@@ -9,17 +9,17 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/configs"
-	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/convert"
-	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/converters/models"
-	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/render"
-	"github.com/nikhilsbhat/ingress-traefik-converter/version"
+	"github.com/nikhilsbhat/nginx-traefik-converter/pkg/configs"
+	"github.com/nikhilsbhat/nginx-traefik-converter/pkg/convert"
+	"github.com/nikhilsbhat/nginx-traefik-converter/pkg/converters/models"
+	"github.com/nikhilsbhat/nginx-traefik-converter/pkg/render"
+	"github.com/nikhilsbhat/nginx-traefik-converter/version"
 	"github.com/spf13/cobra"
 )
 
 func getRootCommand() *cobra.Command {
 	rootCommand := &cobra.Command{
-		Use:   "ingress-traefik-converter [command]",
+		Use:   "nginx-traefik-converter [command]",
 		Short: "A utility to facilitate the conversion of nginx ingress to traefik.",
 		Long:  `It identifies the nginx ingress present in the system and converts them to traefik equivalents.`,
 		Args:  cobra.NoArgs,
@@ -35,8 +35,8 @@ func getRootCommand() *cobra.Command {
 func getVersionCommand() *cobra.Command {
 	return &cobra.Command{
 		Use:   "version [flags]",
-		Short: "Command to fetch the version of ingress-traefik-converter installed",
-		Long:  `This will help the user find what version of the ingress-traefik-converter he or she installed in her machine.`,
+		Short: "Command to fetch the version of nginx-traefik-converter installed",
+		Long:  `This will help the user find what version of the nginx-traefik-converter he or she installed in her machine.`,
 		RunE:  versionConfig,
 	}
 }

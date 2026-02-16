@@ -1,10 +1,10 @@
 # Ingress Traefik Converter
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/nikhilsbhat/ingress-traefik-converter)](https://goreportcard.com/report/github.com/nikhilsbhat/ingress-traefik-converter)
-[![shields](https://img.shields.io/badge/license-MIT-blue)](https://github.com/nikhilsbhat/ingress-traefik-converter/blob/master/LICENSE)
-[![shields](https://godoc.org/github.com/nikhilsbhat/ingress-traefik-converter?status.svg)](https://godoc.org/github.com/nikhilsbhat/ingress-traefik-converter)
-[![shields](https://img.shields.io/github/v/tag/nikhilsbhat/ingress-traefik-converter.svg)](https://github.com/nikhilsbhat/ingress-traefik-converter/tags)
-[![shields](https://img.shields.io/github/downloads/nikhilsbhat/ingress-traefik-converter/total.svg)](https://github.com/nikhilsbhat/ingress-traefik-converter/releases)
+[![Go Report Card](https://goreportcard.com/badge/github.com/nikhilsbhat/nginx-traefik-converter)](https://goreportcard.com/report/github.com/nikhilsbhat/nginx-traefik-converter)
+[![shields](https://img.shields.io/badge/license-MIT-blue)](https://github.com/nikhilsbhat/nginx-traefik-converter/blob/master/LICENSE)
+[![shields](https://godoc.org/github.com/nikhilsbhat/nginx-traefik-converter?status.svg)](https://godoc.org/github.com/nikhilsbhat/nginx-traefik-converter)
+[![shields](https://img.shields.io/github/v/tag/nikhilsbhat/nginx-traefik-converter.svg)](https://github.com/nikhilsbhat/nginx-traefik-converter/tags)
+[![shields](https://img.shields.io/github/downloads/nikhilsbhat/nginx-traefik-converter/total.svg)](https://github.com/nikhilsbhat/nginx-traefik-converter/releases)
 
 This CLI helps migrate Kubernetes Ingress resources from the NGINX Ingress Controller to Traefik v3 in a safe, explicit, and production-oriented way.
 
@@ -134,37 +134,37 @@ The goal is **correctness, transparency, and safety**, not “make it work at an
 ---
 ## Installation
 
-* Recommend installing released versions. Release binaries are available on the [releases](https://github.com/nikhilsbhat/ingress-traefik-converter/releases) page.
+* Recommend installing released versions. Release binaries are available on the [releases](https://github.com/nikhilsbhat/nginx-traefik-converter/releases) page.
 
 #### Homebrew
 
-Install latest version on `ingress-traefik-converter` on `macOS`
+Install latest version on `nginx-traefik-converter` on `macOS`
 
 ```shell
 brew tap nikshilsbhat/stable git@github.com:nikhilsbhat/homebrew-stable.git
 # for latest version
-brew install nikshilsbhat/stable/ingress-traefik-converter
+brew install nikshilsbhat/stable/nginx-traefik-converter
 # for specific version
-brew install nikshilsbhat/stable/ingress-traefik-converter@0.0.3
+brew install nikshilsbhat/stable/nginx-traefik-converter@0.0.3
 ```
 
 Check [repo](https://github.com/nikhilsbhat/homebrew-stable) for all available versions of the formula.
 
 #### Docker
 
-Latest version of docker images are published to [ghcr.io](https://github.com/nikhilsbhat/ingress-traefik-converter/pkgs/container/ingress-traefik-converter), all available images can be found there. </br>
+Latest version of docker images are published to [ghcr.io](https://github.com/nikhilsbhat/nginx-traefik-converter/pkgs/container/nginx-traefik-converter), all available images can be found there. </br>
 
 ```bash
-docker pull ghcr.io/nikhilsbhat/ingress-traefik-converter:latest
-docker pull ghcr.io/nikhilsbhat/ingress-traefik-converter:<github-release-tag>
+docker pull ghcr.io/nikhilsbhat/nginx-traefik-converter:latest
+docker pull ghcr.io/nikhilsbhat/nginx-traefik-converter:<github-release-tag>
 ```
 
 #### Build from Source
 
 1. Clone the repository:
     ```sh
-    git clone https://github.com/nikhilsbhat/ingress-traefik-converter.git
-    cd ingress-traefik-converter
+    git clone https://github.com/nikhilsbhat/nginx-traefik-converter.git
+    cd nginx-traefik-converter
     ```
 2. Build the project:
     ```sh
@@ -180,12 +180,12 @@ docker pull ghcr.io/nikhilsbhat/ingress-traefik-converter:<github-release-tag>
 To convert the existing Nginx ingress to Traefik configurations:
 
 ```sh
-ingress-traefik-converter convert -a                                   #should convert ingress present in all the namespace.
-ingress-traefik-converter convert -c kube-context-one                  #when you have multiple contexts in same kubeconfig file.
-ingress-traefik-converter convert -c kube-context-one -n namespace-one #adding to above, operations limited to namespace 'namespace-one'  
+nginx-traefik-converter convert -a                                   #should convert ingress present in all the namespace.
+nginx-traefik-converter convert -c kube-context-one                  #when you have multiple contexts in same kubeconfig file.
+nginx-traefik-converter convert -c kube-context-one -n namespace-one #adding to above, operations limited to namespace 'namespace-one'  
 ```
 
 ## Documentation
 
 Updated documentation on all available commands and flags can be
-found [here](https://github.com/nikhilsbhat/ingress-traefik-converter/blob/main/docs/doc/ingress-traefik-converter.md).
+found [here](https://github.com/nikhilsbhat/nginx-traefik-converter/blob/main/docs/doc/nginx-traefik-converter.md).

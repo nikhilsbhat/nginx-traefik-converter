@@ -10,7 +10,7 @@ import (
 	"strings"
 
 	"github.com/fatih/color"
-	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/configs"
+	"github.com/nikhilsbhat/nginx-traefik-converter/pkg/configs"
 	"github.com/olekukonko/tablewriter"
 )
 

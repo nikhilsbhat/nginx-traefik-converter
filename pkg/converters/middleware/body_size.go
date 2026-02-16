@@ -3,9 +3,9 @@ package middleware
 import (
 	"fmt"
 
-	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/configs"
-	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/converters/models"
-	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/errors"
+	"github.com/nikhilsbhat/nginx-traefik-converter/pkg/configs"
+	"github.com/nikhilsbhat/nginx-traefik-converter/pkg/converters/models"
+	"github.com/nikhilsbhat/nginx-traefik-converter/pkg/errors"
 	"github.com/traefik/traefik/v3/pkg/config/dynamic"
 	traefik "github.com/traefik/traefik/v3/pkg/provider/kubernetes/crd/traefikio/v1alpha1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"

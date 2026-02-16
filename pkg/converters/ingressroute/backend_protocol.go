@@ -3,8 +3,8 @@ package ingressroute
 import (
 	"strings"
 
-	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/converters/models"
-	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/errors"
+	"github.com/nikhilsbhat/nginx-traefik-converter/pkg/converters/models"
+	"github.com/nikhilsbhat/nginx-traefik-converter/pkg/errors"
 )
 
 // NeedsIngressRoute makes the decision on requirement of ingress routes.

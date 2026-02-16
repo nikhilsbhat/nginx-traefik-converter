@@ -12,12 +12,12 @@ builds:
       - -trimpath
     ldflags:
       - -s -w
-        -X github.com/nikhilsbhat/ingress-traefik-converter/version.Version={{.Version}}
-        -X github.com/nikhilsbhat/ingress-traefik-converter/version.Env={{.Env.BUILD_ENVIRONMENT}}
-        -X github.com/nikhilsbhat/ingress-traefik-converter/version.BuildDate={{.Date}}
-        -X github.com/nikhilsbhat/ingress-traefik-converter/version.Revision={{.Commit}}
-        -X github.com/nikhilsbhat/ingress-traefik-converter/version.GoVersion={{.Env.GOVERSION}}
-        -X github.com/nikhilsbhat/ingress-traefik-converter/version.Platform={{ .Os }}/{{ .Arch }}
+        -X github.com/nikhilsbhat/nginx-traefik-converter/version.Version={{.Version}}
+        -X github.com/nikhilsbhat/nginx-traefik-converter/version.Env={{.Env.BUILD_ENVIRONMENT}}
+        -X github.com/nikhilsbhat/nginx-traefik-converter/version.BuildDate={{.Date}}
+        -X github.com/nikhilsbhat/nginx-traefik-converter/version.Revision={{.Commit}}
+        -X github.com/nikhilsbhat/nginx-traefik-converter/version.GoVersion={{.Env.GOVERSION}}
+        -X github.com/nikhilsbhat/nginx-traefik-converter/version.Platform={{ .Os }}/{{ .Arch }}
     goos:
       - freebsd
       - windows
@@ -34,12 +34,12 @@ dockers:
   - goos: linux
     goarch: amd64
     ids:
-      - ingress-traefik-converter
+      - nginx-traefik-converter
     skip_push: false
     image_templates:
-      - "ghcr.io/nikhilsbhat/ingress-traefik-converter:latest"
-      - "ghcr.io/nikhilsbhat/ingress-traefik-converter:{{ .Tag }}"
-      - "ghcr.io/nikhilsbhat/ingress-traefik-converter:{{ .Tag }}-{{ .Env.GOVERSION }}"
+      - "ghcr.io/nikhilsbhat/nginx-traefik-converter:latest"
+      - "ghcr.io/nikhilsbhat/nginx-traefik-converter:{{ .Tag }}"
+      - "ghcr.io/nikhilsbhat/nginx-traefik-converter:{{ .Tag }}-{{ .Env.GOVERSION }}"
     dockerfile: Dockerfile
 
 archives:
@@ -53,9 +53,9 @@ archives:
       {{- else }}{{ .Arch }}{{ end }}
 
 brews:
-  - name: ingress-traefik-converter
-    homepage: https://github.com/nikhilsbhat/ingress-traefik-converter
-    url_template: "https://github.com/nikhilsbhat/ingress-traefik-converter/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+  - name: nginx-traefik-converter
+    homepage: https://github.com/nikhilsbhat/nginx-traefik-converter
+    url_template: "https://github.com/nikhilsbhat/nginx-traefik-converter/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
     description: "This CLI helps migrate Kubernetes Ingress resources from NGINX Ingress Controller to Traefik v3 in a safe, explicit, and production-oriented way"
     license: "MIT"
     directory: Formula
@@ -75,8 +75,8 @@ brews:
           name: homebrew-stable
           branch: main
   - name: '{{ .ProjectName }}@{{ .Version }}'
-    homepage: https://github.com/nikhilsbhat/ingress-traefik-converter
-    url_template: "https://github.com/nikhilsbhat/ingress-traefik-converter/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+    homepage: https://github.com/nikhilsbhat/nginx-traefik-converter
+    url_template: "https://github.com/nikhilsbhat/nginx-traefik-converter/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
     description: "This CLI helps migrate Kubernetes Ingress resources from NGINX Ingress Controller to Traefik v3 in a safe, explicit, and production-oriented way"
     license: "MIT"
     directory: Formula

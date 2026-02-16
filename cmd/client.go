@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/log"
+	"github.com/nikhilsbhat/nginx-traefik-converter/pkg/log"
 	"github.com/spf13/cobra"
 )
 

@@ -1,7 +1,7 @@
 include makefiles/security.mk
 
 GOFMT_FILES?=$(shell find . -not -path "./vendor/*" -type f -name '*.go')
-APP_NAME?=ingress-traefik-converter
+APP_NAME?=nginx-traefik-converter
 APP_DIR?=$(shell git rev-parse --show-toplevel)
 DEV?=${DEVBOX_TRUE}
 SRC_PACKAGES=$(shell go list -mod=vendor ./... | grep -v "vendor" | grep -v "mocks")
@@ -12,7 +12,7 @@ DATE?=$(shell date)
 PlATFORM?=$(shell go env GOOS)
 ARCHITECTURE?=$(shell go env GOARCH)
 GOVERSION?=$(shell go version | awk '{printf $$3}')
-BUILD_WITH_FLAGS="-s -w -X 'github.com/nikhilsbhat/ingress-traefik-converter/version.Version=${VERSION}' -X 'github.com/nikhilsbhat/ingress-traefik-converter/version.Env=${BUILD_ENVIRONMENT}' -X 'github.com/nikhilsbhat/ingress-traefik-converter/version.BuildDate=${DATE}' -X 'github.com/nikhilsbhat/ingress-traefik-converter/version.Revision=${REVISION}' -X 'github.com/nikhilsbhat/ingress-traefik-converter/version.Platform=${PlATFORM}/${ARCHITECTURE}' -X 'github.com/nikhilsbhat/ingress-traefik-converter/version.GoVersion=${GOVERSION}'"
+BUILD_WITH_FLAGS="-s -w -X 'github.com/nikhilsbhat/nginx-traefik-converter/version.Version=${VERSION}' -X 'github.com/nikhilsbhat/nginx-traefik-converter/version.Env=${BUILD_ENVIRONMENT}' -X 'github.com/nikhilsbhat/nginx-traefik-converter/version.BuildDate=${DATE}' -X 'github.com/nikhilsbhat/nginx-traefik-converter/version.Revision=${REVISION}' -X 'github.com/nikhilsbhat/nginx-traefik-converter/version.Platform=${PlATFORM}/${ARCHITECTURE}' -X 'github.com/nikhilsbhat/nginx-traefik-converter/version.GoVersion=${GOVERSION}'"
 
 # Get the currently used golang install path (in GOPATH/bin, unless GOBIN is set)
 ifeq (,$(shell go env GOBIN))
@@ -70,7 +70,7 @@ generate/mock: ## generates mocks for the selected source packages.
 	@go generate ${SRC_PACKAGES}
 
 generate/document: ## generates cli documents using 'github.com/spf13/cobra/doc'.
-	@go generate github.com/nikhilsbhat/ingress-traefik-converter/docs
+	@go generate github.com/nikhilsbhat/nginx-traefik-converter/docs
 
 test: ## runs test cases
 	@go test ./... -mod=vendor -coverprofile cover.out && go tool cover -html=cover.out -o cover.html && open cover.html

@@ -3,7 +3,7 @@ package middleware
 import (
 	"strings"
 
-	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/configs"
+	"github.com/nikhilsbhat/nginx-traefik-converter/pkg/configs"
 )
 
 /* ---------------- WARNINGS ---------------- */

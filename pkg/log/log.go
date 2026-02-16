@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-// SetLogger sets ingress-traefik-converter logger with desired log level.
+// SetLogger sets nginx-traefik-converter logger with desired log level.
 func SetLogger(logLevel string) *slog.Logger {
 	loggerOpts := &slog.HandlerOptions{
 		AddSource: true,

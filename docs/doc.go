@@ -3,11 +3,11 @@ package main
 import (
 	"log"
 
-	"github.com/nikhilsbhat/ingress-traefik-converter/cmd"
+	"github.com/nikhilsbhat/nginx-traefik-converter/cmd"
 	"github.com/spf13/cobra/doc"
 )
 
-//go:generate go run github.com/nikhilsbhat/ingress-traefik-converter/docs
+//go:generate go run github.com/nikhilsbhat/nginx-traefik-converter/docs
 func main() {
 	commands := cmd.SetIngressTraefikConverterCommands()
 

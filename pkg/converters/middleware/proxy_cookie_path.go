@@ -7,8 +7,8 @@ import (
 	"strings"
 
 	responseHeaders "github.com/jamesmcroft/traefik-plugin-rewrite-response-headers"
-	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/configs"
-	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/converters/models"
+	"github.com/nikhilsbhat/nginx-traefik-converter/pkg/configs"
+	"github.com/nikhilsbhat/nginx-traefik-converter/pkg/converters/models"
 	traefik "github.com/traefik/traefik/v3/pkg/provider/kubernetes/crd/traefikio/v1alpha1"
 	apiextv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"

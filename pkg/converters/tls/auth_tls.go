@@ -1,8 +1,8 @@
 package tls
 
 import (
-	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/configs"
-	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/converters/models"
+	"github.com/nikhilsbhat/nginx-traefik-converter/pkg/configs"
+	"github.com/nikhilsbhat/nginx-traefik-converter/pkg/converters/models"
 )
 
 // HandleAuthTLSVerifyClient is responsible for handling TLS configs of nginx annotations, handles the below.

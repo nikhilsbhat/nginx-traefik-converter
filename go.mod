@@ -1,4 +1,4 @@
-module github.com/nikhilsbhat/ingress-traefik-converter
+module github.com/nikhilsbhat/nginx-traefik-converter
 
 go 1.25.1
 

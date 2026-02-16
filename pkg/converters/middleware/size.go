@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/errors"
+	"github.com/nikhilsbhat/nginx-traefik-converter/pkg/errors"
 )
 
 func parseSizeBytes(val string) (int64, error) {

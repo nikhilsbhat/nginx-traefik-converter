@@ -3,9 +3,9 @@ package cmd
 import (
 	"log/slog"
 
-	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/configs"
-	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/kubernetes"
-	"github.com/nikhilsbhat/ingress-traefik-converter/pkg/render"
+	"github.com/nikhilsbhat/nginx-traefik-converter/pkg/configs"
+	"github.com/nikhilsbhat/nginx-traefik-converter/pkg/kubernetes"
+	"github.com/nikhilsbhat/nginx-traefik-converter/pkg/render"
 	"github.com/spf13/cobra"
 )
 
@@ -29,7 +29,7 @@ var (
 // Registers all global flags to utility.
 func registerCommonFlags(cmd *cobra.Command) {
 	cmd.PersistentFlags().StringVarP(&cliCfg.LogLevel, "log-level", "", "INFO",
-		"log level for the ingress-traefik-converter")
+		"log level for the nginx-traefik-converter")
 	cmd.PersistentFlags().StringVarP(&cliCfg.IngressFile, "ingress-file", "", "",
 		"path to ingress file")
 	cmd.PersistentFlags().StringArrayVarP(&cliCfg.Files, "file", "f", nil,

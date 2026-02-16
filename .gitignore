@@ -32,7 +32,7 @@ prom_ingress.yaml
 annotations.*
 
 # dropping all locally built binaries generated from this repository
-ingress-traefik-converter_*
-!ingress-traefik-converter_*.md
-ingress-traefik-converter
-!ingress-traefik-converter/
+nginx-traefik-converter_*
+!nginx-traefik-converter_*.md
+nginx-traefik-converter
+!nginx-traefik-converter/

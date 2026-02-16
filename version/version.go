@@ -1,4 +1,4 @@
-// Package version powers the versioning of ingress-traefik-converter.
+// Package version powers the versioning of nginx-traefik-converter.
 package version
 
 import (

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/nikhilsbhat/ingress-traefik-converter/cmd"
+	"github.com/nikhilsbhat/nginx-traefik-converter/cmd"
 )
 
 func main() {
